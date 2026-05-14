@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Adivina el Número</title>
+  <style>
+    body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #1a1a2e; color: #eee; }
+    h1 { color: #e94560; }
+    input { padding: 10px; font-size: 1.2rem; border-radius: 6px; border: none; text-align: center; width: 120px; }
+    button { margin-top: 10px; padding: 10px 24px; font-size: 1rem; background: #e94560; color: #fff; border: none; border-radius: 6px; cursor: pointer; }
+    button:hover { background: #c73652; }
+    #msg { margin-top: 20px; font-size: 1.2rem; min-height: 1.5em; }
+    #intentos { color: #aaa; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Adivina el Número</h1>
+  <p>Estoy pensando en un número del <strong>1 al 100</strong></p>
+  <input type="number" id="inp" min="1" max="100" placeholder="Tu número">
+  <button onclick="adivinar()">Adivinar</button>
+  <div id="msg"></div>
+  <div id="intentos"></div>
+  <button id="reiniciar" onclick="reiniciar()" style="display:none;margin-top:20px;background:#0f3460">Jugar de nuevo</button>
+
+  <script>
+    let secreto = Math.floor(Math.random() * 100) + 1;
+    let intentos = 0;
+
+    function adivinar() {
+      const inp = document.getElementById('inp');
+      const n = parseInt(inp.value);
+      const msg = document.getElementById('msg');
+      const ri = document.getElementById('reiniciar');
+
+      if (!n || n < 1 || n > 100) { msg.textContent = 'Ingresa un número válido (1-100)'; return; }
+
+      intentos++;
+      document.getElementById('intentos').textContent = `Intentos: ${intentos}`;
+
+      if (n < secreto) msg.textContent = 'Demasiado bajo ⬆️';
+      else if (n > secreto) msg.textContent = 'Demasiado alto ⬇️';
+      else {
+        msg.textContent = `¡Correcto! Era el ${secreto} 🎉 (${intentos} intento${intentos > 1 ? 's' : ''})`;
+        inp.disabled = true;
+        document.querySelector('button').disabled = true;
+        ri.style.display = 'inline-block';
+      }
+      inp.value = '';
+    }
+
+    function reiniciar() {
+      secreto = Math.floor(Math.random() * 100) + 1;
+      intentos = 0;
+      document.getElementById('inp').disabled = false;
+      document.getElementById('inp').value = '';
+      document.querySelector('button').disabled = false;
+      document.getElementById('msg').textContent = '';
+      document.getElementById('intentos').textContent = '';
+      document.getElementById('reiniciar').style.display = 'none';
+    }
+
+    document.getElementById('inp').addEventListener('keydown', e => { if (e.key === 'Enter') adivinar(); });
+  </script>
+</body>
+</html>
